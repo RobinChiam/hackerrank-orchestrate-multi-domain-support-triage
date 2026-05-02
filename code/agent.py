@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from config import (
@@ -36,7 +37,10 @@ from vector_store import SQLiteVectorStore
 
 
 class SupportTriageAgent:
+    """Support triage pipeline backed by Gemini and a local SQLite vector store."""
+
     def __init__(self, *, index_path: Path, verbose: bool = True) -> None:
+        """Initialize the Gemini client, vector store, and retrieval engine."""
         load_env_file()
         self.verbose = verbose
         self.triage_schema = json.loads(TRIAGE_SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -48,31 +52,20 @@ class SupportTriageAgent:
         )
         self.store = SQLiteVectorStore(Path(index_path))
         self.retriever = RetrievalEngine(
-            client=self.client, store=self.store, verbose=verbose
+            client=self.client,
+            store=self.store,
+            verbose=verbose,
         )
 
     def ensure_index(self, force_rebuild: bool = False) -> None:
+        """Build or refresh the local retrieval index if needed."""
         self.retriever.ensure_index(force_rebuild=force_rebuild)
 
     def triage_ticket(self, issue: str, subject: str, company: str) -> TriageDecision:
+        """Run the Phase 1 triage pass for a single ticket."""
         ticket = Ticket(issue=issue.strip(), subject=subject.strip(), company=company.strip())
-        payload = self.client.generate_json(
-            model=self.client.triage_model,
-            system_instruction=TRIAGE_SYSTEM_PROMPT,
-            prompt=build_triage_prompt(ticket),
-            schema=self.triage_schema,
-        )
-        decision = TriageDecision(
-            sentiment_analysis=str(payload["sentiment_analysis"]).strip(),
-            risk_level=str(payload["risk_level"]).strip(),
-            malicious_intent=bool(payload["malicious_intent"]),
-            inferred_company=str(payload["inferred_company"]).strip(),
-            request_type=str(payload["request_type"]).strip(),
-            product_area=str(payload["product_area"]).strip(),
-            status=str(payload["status"]).strip(),
-        )
-        hardened, _reason = harden_triage(ticket, decision)
-        return hardened
+        decision, _reason = self._hardened_triage(ticket)
+        return decision
 
     def process_csv(
         self,
@@ -83,37 +76,44 @@ class SupportTriageAgent:
         limit: int | None,
         force_rebuild_index: bool,
     ) -> list[AgentOutput]:
+        """Process the input CSV concurrently and write evaluator-ready output."""
         self.ensure_index(force_rebuild=force_rebuild_index)
         rows = self._read_tickets(input_path)
         if limit is not None:
             rows = rows[:limit]
 
-        outputs = []
-        for index, ticket in enumerate(rows, start=1):
-            if self.verbose:
-                print(f"[{index}/{len(rows)}] Processing ticket for {ticket.company or 'None'}")
-            outputs.append(self.process_ticket(ticket, top_k=top_k))
+        ordered_results: list[dict[str, str] | None] = [None] * len(rows)
+        with ThreadPoolExecutor(max_workers=10, thread_name_prefix="triage-ticket") as executor:
+            future_to_index = {
+                executor.submit(self._process_single_ticket, row, top_k): index
+                for index, row in enumerate(rows)
+            }
+            completed = 0
+            for future in as_completed(future_to_index):
+                index = future_to_index[future]
+                ticket = rows[index]
+                try:
+                    ordered_results[index] = future.result()
+                except Exception as exc:  # pragma: no cover - preserves underlying traceback.
+                    company = ticket.company or "None"
+                    raise RuntimeError(
+                        f"Failed to process ticket {index + 1} for {company}."
+                    ) from exc
+                completed += 1
+                if self.verbose:
+                    company = ticket.company or "None"
+                    print(f"[{completed}/{len(rows)}] Processed ticket for {company}")
 
+        if any(row is None for row in ordered_results):
+            raise RuntimeError("One or more ticket results were not collected from the worker pool.")
+
+        outputs = [self._agent_output_from_row(row) for row in ordered_results if row is not None]
         self._write_outputs(output_path, outputs)
         return outputs
 
     def process_ticket(self, ticket: Ticket, *, top_k: int) -> AgentOutput:
-        payload = self.client.generate_json(
-            model=self.client.triage_model,
-            system_instruction=TRIAGE_SYSTEM_PROMPT,
-            prompt=build_triage_prompt(ticket),
-            schema=self.triage_schema,
-        )
-        raw_decision = TriageDecision(
-            sentiment_analysis=str(payload["sentiment_analysis"]).strip(),
-            risk_level=str(payload["risk_level"]).strip(),
-            malicious_intent=bool(payload["malicious_intent"]),
-            inferred_company=str(payload["inferred_company"]).strip(),
-            request_type=str(payload["request_type"]).strip(),
-            product_area=str(payload["product_area"]).strip(),
-            status=str(payload["status"]).strip(),
-        )
-        decision, escalation_reason = harden_triage(ticket, raw_decision)
+        """Process a single ticket through triage, routing, retrieval, and response."""
+        decision, escalation_reason = self._hardened_triage(ticket)
 
         if decision.status == "escalated":
             company = effective_company(ticket, decision)
@@ -195,11 +195,53 @@ class SupportTriageAgent:
             justification=str(response_payload["justification"]).strip(),
         )
 
+    def _process_single_ticket(self, row: Ticket, top_k: int) -> dict[str, str]:
+        """Process one ticket row and return its CSV-ready dictionary."""
+        return self.process_ticket(row, top_k=top_k).to_csv_row()
+
+    def _triage(self, ticket: Ticket) -> TriageDecision:
+        """Run Gemini triage and return the raw structured decision."""
+        payload = self.client.generate_json(
+            model=self.client.triage_model,
+            system_instruction=TRIAGE_SYSTEM_PROMPT,
+            prompt=build_triage_prompt(ticket),
+            schema=self.triage_schema,
+        )
+        return TriageDecision(
+            sentiment_analysis=str(payload["sentiment_analysis"]).strip(),
+            risk_level=str(payload["risk_level"]).strip(),
+            malicious_intent=bool(payload["malicious_intent"]),
+            inferred_company=str(payload["inferred_company"]).strip(),
+            request_type=str(payload["request_type"]).strip(),
+            product_area=str(payload["product_area"]).strip(),
+            status=str(payload["status"]).strip(),
+        )
+
+    def _hardened_triage(self, ticket: Ticket) -> tuple[TriageDecision, str | None]:
+        """Apply deterministic routing hardening to Gemini triage output."""
+        raw_decision = self._triage(ticket)
+        return harden_triage(ticket, raw_decision)
+
+    @staticmethod
+    def _agent_output_from_row(row: dict[str, str]) -> AgentOutput:
+        """Convert a CSV-style dictionary back into an AgentOutput value."""
+        return AgentOutput(
+            issue=row["issue"],
+            subject=row["subject"],
+            company=row["company"],
+            response=row["response"],
+            product_area=row["product_area"],
+            status=row["status"],
+            request_type=row["request_type"],
+            justification=row["justification"],
+        )
+
     @staticmethod
     def _read_tickets(input_path: Path) -> list[Ticket]:
+        """Load CSV ticket rows into Ticket objects."""
         with input_path.open(newline="", encoding="utf-8") as handle:
             reader = csv.DictReader(handle)
-            tickets = []
+            tickets: list[Ticket] = []
             for row in reader:
                 tickets.append(
                     Ticket(
@@ -212,6 +254,7 @@ class SupportTriageAgent:
 
     @staticmethod
     def _write_outputs(output_path: Path, outputs: list[AgentOutput]) -> None:
+        """Write evaluator output rows in the required CSV format."""
         output_path.parent.mkdir(parents=True, exist_ok=True)
         fieldnames = [
             "issue",

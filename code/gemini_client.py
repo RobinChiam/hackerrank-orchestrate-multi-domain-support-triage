@@ -4,16 +4,19 @@ import json
 import time
 import urllib.error
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
 from config import DEFAULT_EMBEDDING_DIMENSION
 
 
 class GeminiAPIError(RuntimeError):
-    pass
+    """Raised when a Gemini API request cannot be completed safely."""
 
 
 class GeminiClient:
+    """Minimal Gemini REST client built entirely on the Python standard library."""
+
     def __init__(
         self,
         api_key: str,
@@ -22,6 +25,7 @@ class GeminiClient:
         embedding_model: str,
         timeout_seconds: int = 90,
     ) -> None:
+        """Store API configuration for structured generation and embeddings."""
         self.api_key = api_key
         self.triage_model = triage_model
         self.response_model = response_model
@@ -38,6 +42,7 @@ class GeminiClient:
         schema: dict[str, Any],
         temperature: float = 0.1,
     ) -> dict[str, Any]:
+        """Generate JSON from Gemini using the provided response schema."""
         payload = {
             "system_instruction": {
                 "parts": [{"text": system_instruction}],
@@ -70,41 +75,101 @@ class GeminiClient:
         output_dimensionality: int = DEFAULT_EMBEDDING_DIMENSION,
         batch_size: int = 16,
     ) -> list[list[float]]:
+        """Embed texts concurrently in batches while preserving input order."""
         if not texts:
             return []
 
+        resolved_titles: list[str | None]
+        if titles is None:
+            resolved_titles = [None] * len(texts)
+        else:
+            resolved_titles = list(titles)
+            if len(resolved_titles) != len(texts):
+                raise ValueError("Text and title counts do not match.")
+
+        batches = [
+            (
+                start,
+                texts[start : start + batch_size],
+                resolved_titles[start : start + batch_size],
+            )
+            for start in range(0, len(texts), batch_size)
+        ]
+        if len(batches) == 1:
+            _, batch_texts, batch_titles = batches[0]
+            return self._embed_batch(
+                batch_texts,
+                task_type=task_type,
+                titles=batch_titles,
+                output_dimensionality=output_dimensionality,
+            )
+
+        ordered_vectors: list[list[float] | None] = [None] * len(texts)
+        max_workers = min(10, len(batches))
+        with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="gemini-embed") as executor:
+            future_to_batch = {
+                executor.submit(
+                    self._embed_batch,
+                    batch_texts,
+                    task_type=task_type,
+                    titles=batch_titles,
+                    output_dimensionality=output_dimensionality,
+                ): (start, len(batch_texts))
+                for start, batch_texts, batch_titles in batches
+            }
+
+            for future in as_completed(future_to_batch):
+                start, batch_length = future_to_batch[future]
+                batch_vectors = future.result()
+                if len(batch_vectors) != batch_length:
+                    raise GeminiAPIError(
+                        f"Expected {batch_length} embeddings, got {len(batch_vectors)}."
+                    )
+                ordered_vectors[start : start + batch_length] = batch_vectors
+
+        if any(vector is None for vector in ordered_vectors):
+            raise GeminiAPIError("One or more embedding batches did not return a result.")
+        return [vector for vector in ordered_vectors if vector is not None]
+
+    def _embed_batch(
+        self,
+        texts: list[str],
+        *,
+        task_type: str,
+        titles: list[str | None],
+        output_dimensionality: int,
+    ) -> list[list[float]]:
+        """Send one batch embedding request and normalize the response payload."""
+        requests: list[dict[str, Any]] = []
+        for text, title in zip(texts, titles):
+            item: dict[str, Any] = {
+                "model": f"models/{self.embedding_model}",
+                "content": {"parts": [{"text": text}]},
+                "taskType": task_type,
+                "outputDimensionality": output_dimensionality,
+            }
+            if title and task_type == "RETRIEVAL_DOCUMENT":
+                item["title"] = title
+            requests.append(item)
+
+        response = self._post(
+            f"{self.embedding_model}:batchEmbedContents",
+            {"requests": requests},
+        )
+        embeddings = response.get("embeddings", [])
+        if len(embeddings) != len(texts):
+            raise GeminiAPIError(f"Expected {len(texts)} embeddings, got {len(embeddings)}")
+
         vectors: list[list[float]] = []
-        for start in range(0, len(texts), batch_size):
-            batch_texts = texts[start : start + batch_size]
-            batch_titles = (titles or [None] * len(texts))[start : start + batch_size]
-            requests = []
-            for text, title in zip(batch_texts, batch_titles):
-                item: dict[str, Any] = {
-                    "model": f"models/{self.embedding_model}",
-                    "content": {"parts": [{"text": text}]},
-                    "taskType": task_type,
-                    "outputDimensionality": output_dimensionality,
-                }
-                if title and task_type == "RETRIEVAL_DOCUMENT":
-                    item["title"] = title
-                requests.append(item)
-
-            payload = {"requests": requests}
-            response = self._post(f"{self.embedding_model}:batchEmbedContents", payload)
-            embeddings = response.get("embeddings", [])
-            if len(embeddings) != len(batch_texts):
-                raise GeminiAPIError(
-                    f"Expected {len(batch_texts)} embeddings, got {len(embeddings)}"
-                )
-            for item in embeddings:
-                values = item.get("values") or item.get("embedding", {}).get("values")
-                if not values:
-                    raise GeminiAPIError("Gemini embedding response did not include values.")
-                vectors.append([float(value) for value in values])
-
+        for item in embeddings:
+            values = item.get("values") or item.get("embedding", {}).get("values")
+            if not values:
+                raise GeminiAPIError("Gemini embedding response did not include values.")
+            vectors.append([float(value) for value in values])
         return vectors
 
     def _post(self, path_suffix: str, payload: dict[str, Any]) -> dict[str, Any]:
+        """POST a JSON request to Gemini with bounded retries for transient failures."""
         body = json.dumps(payload).encode("utf-8")
         request = urllib.request.Request(
             url=f"{self.base_url}/{path_suffix}",
@@ -140,6 +205,7 @@ class GeminiClient:
 
     @staticmethod
     def _extract_text(response: dict[str, Any]) -> str:
+        """Extract the primary text fragment from a Gemini generateContent response."""
         candidates = response.get("candidates", [])
         if not candidates:
             raise GeminiAPIError(f"Gemini returned no candidates: {response}")
