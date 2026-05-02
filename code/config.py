@@ -14,6 +14,7 @@ ENV_FILE = REPO_ROOT / ".env"
 TRIAGE_SCHEMA_PATH = CODE_DIR / "response_schema"
 INDEX_DIR = CODE_DIR / ".triage_index"
 INDEX_DB_PATH = INDEX_DIR / "support_corpus.sqlite3"
+REASONING_LOG_DIR = REPO_ROOT / Path("code/reasoning_logs")
 
 DEFAULT_TRIAGE_MODEL = "gemini-3.1-flash-lite-preview"
 DEFAULT_RESPONSE_MODEL = "gemini-3.1-flash-lite-preview"
