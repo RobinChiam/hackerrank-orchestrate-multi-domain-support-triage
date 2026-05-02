@@ -10,16 +10,16 @@ The agent has three layers:
    - Walks the local `data/` corpus.
    - Cleans and chunks markdown articles.
    - Builds a local SQLite-backed vector index.
-   - Uses Gemini Embedding 2 (`gemini-embedding-2`) to embed corpus chunks and retrieval queries.
+   - Uses the Gemini embedding model (`gemini-embedding-2`) to embed corpus chunks and retrieval queries.
 
 2. Reasoning layer
-   - Phase 1 triage uses Gemini 3.1 Pro Preview (`gemini-3.1-pro-preview`) with structured JSON output.
+   - Phase 1 triage uses Gemini 3.1 Flash-Lite Preview (`gemini-3.1-flash-lite-preview`) with structured JSON output.
    - The triage prompt enforces:
      - critical-risk escalation boundaries
      - company inference when `company=None`
      - prompt-injection and malicious-intent detection
      - highest-watermark handling for multi-issue tickets
-   - Phase 2 drafts grounded replies only when the ticket is safe to answer.
+   - Phase 2 also uses Gemini 3.1 Flash-Lite Preview (`gemini-3.1-flash-lite-preview`) to draft grounded replies only when the ticket is safe to answer.
 
 3. Response/output layer
    - Escalations bypass AI response generation and use hardcoded safe templates.
@@ -34,6 +34,12 @@ The agent has three layers:
   - `GOOGLE_API_KEY=...`
 
 No third-party Python packages are required. The application uses only the Python standard library.
+
+Model overrides can still be provided in the repo-root `.env` file:
+
+- `GEMINI_TRIAGE_MODEL=...`
+- `GEMINI_RESPONSE_MODEL=...`
+- `GEMINI_EMBEDDING_MODEL=...`
 
 ## Commands
 

@@ -15,8 +15,8 @@ TRIAGE_SCHEMA_PATH = CODE_DIR / "response_schema"
 INDEX_DIR = CODE_DIR / ".triage_index"
 INDEX_DB_PATH = INDEX_DIR / "support_corpus.sqlite3"
 
-DEFAULT_TRIAGE_MODEL = "gemini-3.1-pro-preview"
-DEFAULT_RESPONSE_MODEL = "gemini-3.1-pro-preview"
+DEFAULT_TRIAGE_MODEL = "gemini-3.1-flash-lite-preview"
+DEFAULT_RESPONSE_MODEL = "gemini-3.1-flash-lite-preview"
 DEFAULT_EMBEDDING_MODEL = "gemini-embedding-2"
 DEFAULT_EMBEDDING_DIMENSION = 768
 
