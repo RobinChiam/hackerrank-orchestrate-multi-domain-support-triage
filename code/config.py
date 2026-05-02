@@ -20,6 +20,7 @@ DEFAULT_TRIAGE_MODEL = "gemini-3.1-flash-lite-preview"
 DEFAULT_RESPONSE_MODEL = "gemini-3.1-flash-lite-preview"
 DEFAULT_EMBEDDING_MODEL = "gemini-embedding-2"
 DEFAULT_EMBEDDING_DIMENSION = 768
+DEFAULT_SEED = 42
 
 
 def load_env_file(path: Path = ENV_FILE) -> dict[str, str]:

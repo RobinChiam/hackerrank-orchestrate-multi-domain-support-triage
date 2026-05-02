@@ -9,6 +9,7 @@ from typing import Any
 from config import (
     DEFAULT_EMBEDDING_MODEL,
     DEFAULT_RESPONSE_MODEL,
+    DEFAULT_SEED,
     DEFAULT_TRIAGE_MODEL,
     REASONING_LOG_DIR,
     TRIAGE_SCHEMA_PATH,
@@ -228,6 +229,8 @@ class SupportTriageAgent:
             system_instruction=RESPONSE_SYSTEM_PROMPT,
             prompt=build_response_prompt(ticket, decision, hits),
             schema=FINAL_RESPONSE_SCHEMA,
+            temperature=0.0,
+            seed=DEFAULT_SEED,
         )
 
         grounded = bool(response_payload["grounded"])
@@ -279,6 +282,8 @@ class SupportTriageAgent:
             system_instruction=TRIAGE_SYSTEM_PROMPT,
             prompt=build_triage_prompt(ticket),
             schema=self.triage_schema,
+            temperature=0.0,
+            seed=DEFAULT_SEED,
         )
         decision = TriageDecision(
             sentiment_analysis=str(payload["sentiment_analysis"]).strip(),

@@ -40,9 +40,18 @@ class GeminiClient:
         system_instruction: str,
         prompt: str,
         schema: dict[str, Any],
-        temperature: float = 0.1,
+        temperature: float = 0.0,
+        seed: int | None = None,
     ) -> dict[str, Any]:
         """Generate JSON from Gemini using the provided response schema."""
+        generation_config: dict[str, Any] = {
+            "temperature": temperature,
+            "responseMimeType": "application/json",
+            "responseJsonSchema": schema,
+        }
+        if seed is not None:
+            generation_config["seed"] = seed
+
         payload = {
             "system_instruction": {
                 "parts": [{"text": system_instruction}],
@@ -53,11 +62,7 @@ class GeminiClient:
                     "parts": [{"text": prompt}],
                 }
             ],
-            "generationConfig": {
-                "temperature": temperature,
-                "responseMimeType": "application/json",
-                "responseJsonSchema": schema,
-            },
+            "generationConfig": generation_config,
         }
         response = self._post(f"{model}:generateContent", payload)
         text = self._extract_text(response)
