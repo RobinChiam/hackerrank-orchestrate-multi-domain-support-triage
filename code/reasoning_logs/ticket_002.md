@@ -63,18 +63,18 @@ the platform must have graded me unfairly.
 ```json
 {
   "grounded": true,
-  "justification": "The provided documentation confirms that HackerRank facilitates the testing process and report generation for recruiters, but does not indicate that HackerRank staff can intervene in recruitment decisions or manually adjust candidate scores.",
+  "justification": "The provided documentation confirms that HackerRank provides the platform for assessments and reports, but hiring decisions and score reviews are managed by the recruiters/companies using the platform. I have directed the user to contact the recruiter directly as HackerRank does not have the authority to change scores or influence hiring outcomes.",
   "product_area": "test_grading",
-  "response": "We understand you have concerns regarding your test results. Please note that HackerRank provides the assessment platform and reporting tools to recruiters, but we do not participate in hiring decisions or the evaluation of individual candidate performance. If you believe there was an error in your assessment, we recommend reaching out directly to the recruiter or the hiring company you applied with, as they manage the review process and final hiring decisions."
+  "response": "We understand your concern regarding your test results. Please note that HackerRank provides the assessment platform and reporting tools to recruiters, but we do not participate in hiring decisions or the evaluation of individual candidate performance. If you have questions about your score or the recruitment process, please reach out directly to the company that invited you to the test, as they are responsible for reviewing results and determining the next steps in their hiring process."
 }
 ```
 
 ### Final Response
 ```text
-We understand you have concerns regarding your test results. Please note that HackerRank provides the assessment platform and reporting tools to recruiters, but we do not participate in hiring decisions or the evaluation of individual candidate performance. If you believe there was an error in your assessment, we recommend reaching out directly to the recruiter or the hiring company you applied with, as they manage the review process and final hiring decisions.
+We understand your concern regarding your test results. Please note that HackerRank provides the assessment platform and reporting tools to recruiters, but we do not participate in hiring decisions or the evaluation of individual candidate performance. If you have questions about your score or the recruitment process, please reach out directly to the company that invited you to the test, as they are responsible for reviewing results and determining the next steps in their hiring process.
 ```
 
 ### Final Justification
 ```text
-The provided documentation confirms that HackerRank facilitates the testing process and report generation for recruiters, but does not indicate that HackerRank staff can intervene in recruitment decisions or manually adjust candidate scores.
+The provided documentation confirms that HackerRank provides the platform for assessments and reports, but hiring decisions and score reviews are managed by the recruiters/companies using the platform. I have directed the user to contact the recruiter directly as HackerRank does not have the authority to change scores or influence hiring outcomes.
 ```

@@ -15,10 +15,10 @@ I am facing multiple issues in my project. all requests to claude with aws bedro
 {
   "inferred_company": "Claude",
   "malicious_intent": false,
-  "product_area": "api_connectivity",
+  "product_area": "aws_bedrock_integration",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a critical system-wide failure regarding API connectivity, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is experiencing a critical system failure affecting their integration, leading to a frustrated and urgent tone.",
   "status": "escalated"
 }
 ```
@@ -28,10 +28,10 @@ I am facing multiple issues in my project. all requests to claude with aws bedro
 {
   "inferred_company": "Claude",
   "malicious_intent": false,
-  "product_area": "api_connectivity",
+  "product_area": "aws_bedrock_integration",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a critical system-wide failure regarding API connectivity, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is experiencing a critical system failure affecting their integration, leading to a frustrated and urgent tone.",
   "status": "escalated"
 }
 ```
@@ -45,10 +45,10 @@ I am facing multiple issues in my project. all requests to claude with aws bedro
 {
   "inferred_company": "Claude",
   "malicious_intent": false,
-  "product_area": "api_connectivity",
+  "product_area": "aws_bedrock_integration",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a critical system-wide failure regarding API connectivity, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is experiencing a critical system failure affecting their integration, leading to a frustrated and urgent tone.",
   "status": "escalated"
 }
 ```

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from agent import SupportTriageAgent
 from config import DEFAULT_INPUT_CSV, DEFAULT_OUTPUT_CSV, INDEX_DB_PATH
+from terminal_ui import clear_line, play_startup_animation, print_success_summary
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -118,6 +119,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if command == "run":
+        play_startup_animation(
+            "Initializing Support Triage Agent...",
+            enabled=verbose,
+        )
         outputs = agent.process_csv(
             input_path=args.input,
             output_path=args.output,
@@ -126,7 +131,12 @@ def main(argv: list[str] | None = None) -> int:
             force_rebuild_index=args.rebuild_index,
         )
         if verbose:
-            print(f"Wrote {len(outputs)} rows to {args.output}")
+            clear_line(enabled=True)
+            print_success_summary(
+                total=len(outputs),
+                output_path=str(args.output),
+                enabled=True,
+            )
         return 0
 
     parser.error(f"Unsupported command: {command}")

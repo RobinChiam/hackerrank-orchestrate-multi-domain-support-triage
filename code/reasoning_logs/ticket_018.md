@@ -61,7 +61,7 @@ Hello, I have completed an assessment, but my name is incorrect on the certifica
 ```json
 {
   "grounded": true,
-  "justification": "The support corpus explicitly states that users can update their certificate name once per account via the certificate page and provides the specific steps to do so.",
+  "justification": "The support corpus explicitly provides the steps for a user to update their name on a certificate, noting that it can only be done once per account.",
   "product_area": "certification_management",
   "response": "You can update the name on your certificate once per account. Please note that this change will apply to all your certificates and cannot be changed again. To update your name, open your certificate page, enter the desired name in the 'Full Name' field, click 'Regenerate Certificate', and then select 'Update Name' in the confirmation dialog."
 }
@@ -74,5 +74,5 @@ You can update the name on your certificate once per account. Please note that t
 
 ### Final Justification
 ```text
-The support corpus explicitly states that users can update their certificate name once per account via the certificate page and provides the specific steps to do so.
+The support corpus explicitly provides the steps for a user to update their name on a certificate, noting that it can only be done once per account.
 ```

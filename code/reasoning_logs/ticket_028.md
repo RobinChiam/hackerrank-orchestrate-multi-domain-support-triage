@@ -63,13 +63,13 @@ i am a professor in a college and wanted to setup a claude lti key for my studen
   "grounded": true,
   "justification": "The response provides the necessary steps for an administrator to set up the LTI integration as requested and directs the user to their internal university support for account-specific assistance.",
   "product_area": "lti_integration",
-  "response": "To set up the Claude LTI integration in Canvas, you must have administrator access to both your Canvas LMS and your Claude for Education organization. Please follow the steps outlined in our guide, 'Set up the Claude LTI in Canvas by Instructure,' which covers creating the developer key in Canvas, installing the app, and enabling the integration within your Claude for Education organization settings. If you encounter any issues or have questions regarding your specific account configuration, please contact your university's IT department or designated administrator."
+  "response": "To set up the Claude LTI integration in Canvas, you must have administrator access to both your Canvas LMS and your Claude for Education organization. Please follow the steps outlined in our guide, 'Set up the Claude LTI in Canvas by Instructure,' which covers creating the developer key in Canvas, installing the app, and enabling the integration within your Claude for Education organization settings. If you encounter any issues or have questions regarding your specific account configuration, we recommend contacting your university's IT department or designated administrator."
 }
 ```
 
 ### Final Response
 ```text
-To set up the Claude LTI integration in Canvas, you must have administrator access to both your Canvas LMS and your Claude for Education organization. Please follow the steps outlined in our guide, 'Set up the Claude LTI in Canvas by Instructure,' which covers creating the developer key in Canvas, installing the app, and enabling the integration within your Claude for Education organization settings. If you encounter any issues or have questions regarding your specific account configuration, please contact your university's IT department or designated administrator.
+To set up the Claude LTI integration in Canvas, you must have administrator access to both your Canvas LMS and your Claude for Education organization. Please follow the steps outlined in our guide, 'Set up the Claude LTI in Canvas by Instructure,' which covers creating the developer key in Canvas, installing the app, and enabling the integration within your Claude for Education organization settings. If you encounter any issues or have questions regarding your specific account configuration, we recommend contacting your university's IT department or designated administrator.
 ```
 
 ### Final Justification

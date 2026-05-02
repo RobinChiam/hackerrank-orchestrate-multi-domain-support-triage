@@ -66,7 +66,7 @@ without being kicked out of the room?
 ```json
 {
   "grounded": true,
-  "justification": "The documentation specifies that an interview ends automatically after one hour of inactivity if no other interviewers are present. There is no mention of a 20-minute inactivity timer or a way to adjust these settings.",
+  "justification": "The documentation specifies that an interview ends automatically after one hour of inactivity if no other interviewers are present. There is no information provided in the corpus to suggest that this time limit can be adjusted or that inactivity is triggered by a lack of interaction with the HR screen specifically.",
   "product_area": "interview_session_management",
   "response": "Regarding your inquiry about inactivity, please note that if no other interviewers are present in the session, the candidate will be moved to the lobby and the interview will end automatically after one hour of inactivity. If you are experiencing issues where participants are being moved to the lobby sooner than expected, please ensure that at least one interviewer remains active in the session. Currently, there is no configurable setting to extend this one-hour inactivity threshold."
 }
@@ -79,5 +79,5 @@ Regarding your inquiry about inactivity, please note that if no other interviewe
 
 ### Final Justification
 ```text
-The documentation specifies that an interview ends automatically after one hour of inactivity if no other interviewers are present. There is no mention of a 20-minute inactivity timer or a way to adjust these settings.
+The documentation specifies that an interview ends automatically after one hour of inactivity if no other interviewers are present. There is no information provided in the corpus to suggest that this time limit can be adjusted or that inactivity is triggered by a lack of interaction with the HR screen specifically.
 ```

@@ -61,18 +61,18 @@ I want Claude to stop crawling by website
 ```json
 {
   "grounded": true,
-  "justification": "The response directly provides the technical instructions for blocking the Claude crawler using robots.txt as outlined in the provided support documentation.",
+  "justification": "The response provides the specific technical instructions for blocking the Claude crawler using robots.txt as outlined in the provided support documentation.",
   "product_area": "data_privacy",
-  "response": "To stop Claude from crawling your website, you can update your robots.txt file to include a directive for 'ClaudeBot'. To block the bot from your entire website, add the following to the robots.txt file in your top-level directory: User-agent: ClaudeBot, Disallow: /. Please ensure you apply this to every subdomain you wish to opt out. For further questions or if you believe our bots are malfunctioning, you can contact claudebot@anthropic.com, ensuring you include the domain you are inquiring about in your email."
+  "response": "To opt out of having your website crawled by Anthropic's bots, you can update your robots.txt file. To block our bot from your entire website, please add the following to the robots.txt file in your top-level directory: User-agent: ClaudeBot Disallow: /. Please ensure you apply this to every subdomain you wish to opt out of. We recommend this method over blocking IP addresses, as blocking our IPs may prevent us from reading your robots.txt file correctly. If you have further questions or believe our bots are malfunctioning, you can contact us at claudebot@anthropic.com."
 }
 ```
 
 ### Final Response
 ```text
-To stop Claude from crawling your website, you can update your robots.txt file to include a directive for 'ClaudeBot'. To block the bot from your entire website, add the following to the robots.txt file in your top-level directory: User-agent: ClaudeBot, Disallow: /. Please ensure you apply this to every subdomain you wish to opt out. For further questions or if you believe our bots are malfunctioning, you can contact claudebot@anthropic.com, ensuring you include the domain you are inquiring about in your email.
+To opt out of having your website crawled by Anthropic's bots, you can update your robots.txt file. To block our bot from your entire website, please add the following to the robots.txt file in your top-level directory: User-agent: ClaudeBot Disallow: /. Please ensure you apply this to every subdomain you wish to opt out of. We recommend this method over blocking IP addresses, as blocking our IPs may prevent us from reading your robots.txt file correctly. If you have further questions or believe our bots are malfunctioning, you can contact us at claudebot@anthropic.com.
 ```
 
 ### Final Justification
 ```text
-The response directly provides the technical instructions for blocking the Claude crawler using robots.txt as outlined in the provided support documentation.
+The response provides the specific technical instructions for blocking the Claude crawler using robots.txt as outlined in the provided support documentation.
 ```

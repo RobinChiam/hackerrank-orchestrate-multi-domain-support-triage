@@ -15,7 +15,7 @@ I need urgent cash but don't have any right now & only the VISA card
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "atm_cash_withdrawal",
+  "product_area": "cash_advance",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "The user is expressing financial distress and urgency regarding cash access.",
@@ -28,7 +28,7 @@ I need urgent cash but don't have any right now & only the VISA card
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "atm_cash_withdrawal",
+  "product_area": "cash_advance",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "The user is expressing financial distress and urgency regarding cash access.",
@@ -45,7 +45,7 @@ I need urgent cash but don't have any right now & only the VISA card
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "atm_cash_withdrawal",
+  "product_area": "cash_advance",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "The user is expressing financial distress and urgency regarding cash access.",
@@ -61,18 +61,18 @@ I need urgent cash but don't have any right now & only the VISA card
 ```json
 {
   "grounded": true,
-  "justification": "The response directs the user to use ATMs with the PLUS logo for standard withdrawals and provides the GCAS contact information for emergency cash services as outlined in the support documentation.",
-  "product_area": "atm_cash_withdrawal",
-  "response": "If you need urgent cash, you can use your Visa card at any ATM displaying the Visa PLUS logo. If you are unable to access cash or are experiencing an emergency, please contact Visa\u2019s Global Customer Assistance Services (GCAS) at +1 303 967 1090, or use the specific toll-free number for your current location to request emergency cash services."
+  "justification": "The response provides the specific contact information for Visa's Global Customer Assistance Services, which is explicitly stated in the corpus to provide emergency cash services, and mentions the option of using ATMs with the PLUS logo.",
+  "product_area": "cash_advance",
+  "response": "If you are in need of emergency cash, Visa\u2019s Global Customer Assistance Services (GCAS) can provide emergency cash services wherever you are in the world. You can reach GCAS 24 hours a day, 365 days a year by calling +1 303 967 1090 from anywhere in the world. Additionally, if your card bears the PLUS logo, you can use it to withdraw local currency at any ATM with the Visa PLUS mark."
 }
 ```
 
 ### Final Response
 ```text
-If you need urgent cash, you can use your Visa card at any ATM displaying the Visa PLUS logo. If you are unable to access cash or are experiencing an emergency, please contact Visa’s Global Customer Assistance Services (GCAS) at +1 303 967 1090, or use the specific toll-free number for your current location to request emergency cash services.
+If you are in need of emergency cash, Visa’s Global Customer Assistance Services (GCAS) can provide emergency cash services wherever you are in the world. You can reach GCAS 24 hours a day, 365 days a year by calling +1 303 967 1090 from anywhere in the world. Additionally, if your card bears the PLUS logo, you can use it to withdraw local currency at any ATM with the Visa PLUS mark.
 ```
 
 ### Final Justification
 ```text
-The response directs the user to use ATMs with the PLUS logo for standard withdrawals and provides the GCAS contact information for emergency cash services as outlined in the support documentation.
+The response provides the specific contact information for Visa's Global Customer Assistance Services, which is explicitly stated in the corpus to provide emergency cash services, and mentions the option of using ATMs with the PLUS logo.
 ```

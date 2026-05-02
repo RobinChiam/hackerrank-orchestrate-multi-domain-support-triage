@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -36,6 +37,7 @@ from router import (
     safe_escalation_response,
     slugify_product_area,
 )
+from terminal_ui import ProgressBar
 from vector_store import SQLiteVectorStore
 
 
@@ -88,26 +90,30 @@ class SupportTriageAgent:
             rows = rows[:limit]
 
         ordered_results: list[dict[str, str] | None] = [None] * len(rows)
+        progress_bar = ProgressBar(len(rows), enabled=self.verbose)
+        progress_lock = threading.Lock()
+        progress_bar.render_initial()
         with ThreadPoolExecutor(max_workers=10, thread_name_prefix="triage-ticket") as executor:
             future_to_index = {
                 executor.submit(self._process_single_ticket, row, top_k, index + 1): index
                 for index, row in enumerate(rows)
             }
-            completed = 0
-            for future in as_completed(future_to_index):
-                index = future_to_index[future]
-                ticket = rows[index]
-                try:
-                    ordered_results[index] = future.result()
-                except Exception as exc:  # pragma: no cover - preserves underlying traceback.
-                    company = ticket.company or "None"
-                    raise RuntimeError(
-                        f"Failed to process ticket {index + 1} for {company}."
-                    ) from exc
-                completed += 1
-                if self.verbose:
-                    company = ticket.company or "None"
-                    print(f"[{completed}/{len(rows)}] Processed ticket for {company}")
+            try:
+                for future in as_completed(future_to_index):
+                    index = future_to_index[future]
+                    ticket = rows[index]
+                    try:
+                        ordered_results[index] = future.result()
+                    except Exception as exc:  # pragma: no cover - preserves underlying traceback.
+                        progress_bar.clear()
+                        company = ticket.company or "None"
+                        raise RuntimeError(
+                            f"Failed to process ticket {index + 1} for {company}."
+                        ) from exc
+                    with progress_lock:
+                        progress_bar.advance()
+            finally:
+                progress_bar.clear()
 
         if any(row is None for row in ordered_results):
             raise RuntimeError("One or more ticket results were not collected from the worker pool.")

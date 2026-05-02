@@ -15,7 +15,7 @@ How do I dispute a charge
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "dispute_management",
+  "product_area": "transaction_dispute",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "Neutral, inquiry-based, standard customer support request.",
@@ -28,7 +28,7 @@ How do I dispute a charge
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "dispute_management",
+  "product_area": "transaction_dispute",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "Neutral, inquiry-based, standard customer support request.",
@@ -45,7 +45,7 @@ How do I dispute a charge
 {
   "inferred_company": "Visa",
   "malicious_intent": false,
-  "product_area": "dispute_management",
+  "product_area": "transaction_dispute",
   "request_type": "product_issue",
   "risk_level": "low",
   "sentiment_analysis": "Neutral, inquiry-based, standard customer support request.",
@@ -61,18 +61,18 @@ How do I dispute a charge
 ```json
 {
   "grounded": true,
-  "justification": "The support corpus explicitly instructs consumers to contact their card issuer or bank using the phone number on their card to initiate a dispute.",
-  "product_area": "dispute_management",
-  "response": "To dispute a charge, please contact your card issuer or bank directly. You can find the appropriate contact phone number on the front or back of your Visa card. Your issuer or bank will typically require detailed information regarding the transaction to assist you with the dispute process."
+  "justification": "The retrieved corpus explicitly instructs consumers to contact their card issuer or bank using the phone number on their card to initiate a dispute.",
+  "product_area": "transaction_dispute",
+  "response": "To dispute a charge, please contact your card issuer or bank directly. You can find the appropriate contact number on the front or back of your Visa card. Your issuer or bank will typically require detailed information regarding the transaction to assist you with the dispute process."
 }
 ```
 
 ### Final Response
 ```text
-To dispute a charge, please contact your card issuer or bank directly. You can find the appropriate contact phone number on the front or back of your Visa card. Your issuer or bank will typically require detailed information regarding the transaction to assist you with the dispute process.
+To dispute a charge, please contact your card issuer or bank directly. You can find the appropriate contact number on the front or back of your Visa card. Your issuer or bank will typically require detailed information regarding the transaction to assist you with the dispute process.
 ```
 
 ### Final Justification
 ```text
-The support corpus explicitly instructs consumers to contact their card issuer or bank using the phone number on their card to initiate a dispute.
+The retrieved corpus explicitly instructs consumers to contact their card issuer or bank using the phone number on their card to initiate a dispute.
 ```

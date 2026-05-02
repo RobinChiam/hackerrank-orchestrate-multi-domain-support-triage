@@ -18,7 +18,7 @@ Claude has stopped working completely, all requests are failing
   "product_area": "platform_availability",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a complete service outage, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is reporting a complete platform outage, indicating high urgency and frustration.",
   "status": "escalated"
 }
 ```
@@ -31,7 +31,7 @@ Claude has stopped working completely, all requests are failing
   "product_area": "platform_availability",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a complete service outage, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is reporting a complete platform outage, indicating high urgency and frustration.",
   "status": "escalated"
 }
 ```
@@ -48,7 +48,7 @@ Claude has stopped working completely, all requests are failing
   "product_area": "platform_availability",
   "request_type": "product_issue",
   "risk_level": "critical",
-  "sentiment_analysis": "The user is reporting a complete service outage, indicating high urgency and frustration.",
+  "sentiment_analysis": "The user is reporting a complete platform outage, indicating high urgency and frustration.",
   "status": "escalated"
 }
 ```

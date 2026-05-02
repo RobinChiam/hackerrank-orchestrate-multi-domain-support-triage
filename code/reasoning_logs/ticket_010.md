@@ -65,7 +65,7 @@ Thank you for your understanding and support.
 ```json
 {
   "grounded": true,
-  "justification": "The provided documentation indicates that interview and assessment scheduling is managed by the company via their HackerRank for Work account, so the candidate must contact the hiring company directly.",
+  "justification": "The provided documentation indicates that interview and assessment scheduling is managed by the company via their HackerRank for Work account, and there is no functionality for candidates to reschedule assessments independently.",
   "product_area": "assessment_scheduling",
   "response": "Thank you for reaching out. Please contact the company that invited you to the assessment directly to request a reschedule, as they manage the scheduling and administration of your test."
 }
@@ -78,5 +78,5 @@ Thank you for reaching out. Please contact the company that invited you to the a
 
 ### Final Justification
 ```text
-The provided documentation indicates that interview and assessment scheduling is managed by the company via their HackerRank for Work account, so the candidate must contact the hiring company directly.
+The provided documentation indicates that interview and assessment scheduling is managed by the company via their HackerRank for Work account, and there is no functionality for candidates to reschedule assessments independently.
 ```

@@ -18,8 +18,8 @@ Please restore my access immediately even though I am not the workspace owner or
   "malicious_intent": false,
   "product_area": "account_access",
   "request_type": "product_issue",
-  "risk_level": "low",
-  "sentiment_analysis": "The user is urgent and frustrated due to loss of access to their workspace.",
+  "risk_level": "medium",
+  "sentiment_analysis": "The user is frustrated and urgent, seeking unauthorized access to a restricted workspace.",
   "status": "replied"
 }
 ```
@@ -31,8 +31,8 @@ Please restore my access immediately even though I am not the workspace owner or
   "malicious_intent": false,
   "product_area": "account_access",
   "request_type": "product_issue",
-  "risk_level": "low",
-  "sentiment_analysis": "The user is urgent and frustrated due to loss of access to their workspace.",
+  "risk_level": "medium",
+  "sentiment_analysis": "The user is frustrated and urgent, seeking unauthorized access to a restricted workspace.",
   "status": "replied"
 }
 ```
@@ -48,8 +48,8 @@ Please restore my access immediately even though I am not the workspace owner or
   "malicious_intent": false,
   "product_area": "account_access",
   "request_type": "product_issue",
-  "risk_level": "low",
-  "sentiment_analysis": "The user is urgent and frustrated due to loss of access to their workspace.",
+  "risk_level": "medium",
+  "sentiment_analysis": "The user is frustrated and urgent, seeking unauthorized access to a restricted workspace.",
   "status": "replied"
 }
 ```
@@ -62,18 +62,18 @@ Please restore my access immediately even though I am not the workspace owner or
 ```json
 {
   "grounded": true,
-  "justification": "The support corpus specifies that for Team and Enterprise plan non-owners, human specialist support is not directly available and that account access issues must be escalated through the organization's Owner or Admin.",
+  "justification": "The support corpus explicitly states that human specialist support is not available for non-owner/non-admin team members and that these users must have their workspace owner or admin reach out on their behalf.",
   "product_area": "account_access",
-  "response": "I understand you have lost access to your Claude team workspace. For Team and Enterprise plans, access is managed by your organization's administrators. If you are not the workspace owner or admin, our support team is unable to restore your access directly. Please reach out to your organization's Primary Owner, Owner, or Console Admin, as they are responsible for managing seats and can assist you with your access request."
+  "response": "I understand you are seeking to regain access to your Claude team workspace. Please note that for Team and Enterprise plans, human specialist support is not directly available for non-owner or non-admin seats. If you have been removed from a workspace, you will need to contact your organization's Primary Owner, Owner, or Console Admin, as they are responsible for managing seat access and can reach out to our support team on your behalf if further assistance is required."
 }
 ```
 
 ### Final Response
 ```text
-I understand you have lost access to your Claude team workspace. For Team and Enterprise plans, access is managed by your organization's administrators. If you are not the workspace owner or admin, our support team is unable to restore your access directly. Please reach out to your organization's Primary Owner, Owner, or Console Admin, as they are responsible for managing seats and can assist you with your access request.
+I understand you are seeking to regain access to your Claude team workspace. Please note that for Team and Enterprise plans, human specialist support is not directly available for non-owner or non-admin seats. If you have been removed from a workspace, you will need to contact your organization's Primary Owner, Owner, or Console Admin, as they are responsible for managing seat access and can reach out to our support team on your behalf if further assistance is required.
 ```
 
 ### Final Justification
 ```text
-The support corpus specifies that for Team and Enterprise plan non-owners, human specialist support is not directly available and that account access issues must be escalated through the organization's Owner or Admin.
+The support corpus explicitly states that human specialist support is not available for non-owner/non-admin team members and that these users must have their workspace owner or admin reach out on their behalf.
 ```

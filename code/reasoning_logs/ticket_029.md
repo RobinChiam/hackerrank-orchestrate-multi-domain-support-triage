@@ -61,18 +61,18 @@ i am in US Virgin Islands and the merchant is saying i have to spend minimum 10$
 ```json
 {
   "grounded": true,
-  "justification": "The retrieved support corpus explicitly states that merchants in the US Virgin Islands are permitted to set a $10 minimum for credit card transactions, but not for debit cards, and instructs users to contact their issuer if these rules are not followed.",
+  "justification": "The support corpus explicitly states that merchants in the US Virgin Islands are permitted to set a $10 minimum for credit card transactions, but not for debit cards.",
   "product_area": "merchant_policy",
-  "response": "In general, merchants are not permitted to set minimum or maximum limits for Visa transactions. However, there is an exception for the US Virgin Islands, where merchants are allowed to require a minimum transaction amount of up to US$10 for credit card purchases. If a merchant is applying this requirement to a Visa debit card, or if they are requiring a minimum amount greater than US$10 on a credit card, please contact your Visa card issuer for further assistance."
+  "response": "In general, merchants are not permitted to set minimum or maximum transaction limits for Visa cards. However, there is an exception for credit cards in the US Virgin Islands, where merchants are allowed to require a minimum transaction amount of up to US$10. If a merchant is requiring a minimum for a Visa debit card, or if the credit card minimum exceeds US$10, please contact your Visa card issuer for further assistance."
 }
 ```
 
 ### Final Response
 ```text
-In general, merchants are not permitted to set minimum or maximum limits for Visa transactions. However, there is an exception for the US Virgin Islands, where merchants are allowed to require a minimum transaction amount of up to US$10 for credit card purchases. If a merchant is applying this requirement to a Visa debit card, or if they are requiring a minimum amount greater than US$10 on a credit card, please contact your Visa card issuer for further assistance.
+In general, merchants are not permitted to set minimum or maximum transaction limits for Visa cards. However, there is an exception for credit cards in the US Virgin Islands, where merchants are allowed to require a minimum transaction amount of up to US$10. If a merchant is requiring a minimum for a Visa debit card, or if the credit card minimum exceeds US$10, please contact your Visa card issuer for further assistance.
 ```
 
 ### Final Justification
 ```text
-The retrieved support corpus explicitly states that merchants in the US Virgin Islands are permitted to set a $10 minimum for credit card transactions, but not for debit cards, and instructs users to contact their issuer if these rules are not followed.
+The support corpus explicitly states that merchants in the US Virgin Islands are permitted to set a $10 minimum for credit card transactions, but not for debit cards.
 ```

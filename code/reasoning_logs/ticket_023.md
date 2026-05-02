@@ -61,18 +61,18 @@ I am allowing Claude to use my data to improve the models, how long will the dat
 ```json
 {
   "grounded": true,
-  "justification": "The provided documentation explains how data is protected when used for model improvement and confirms that users maintain control over their privacy settings, but it does not specify a fixed duration for how long data is used for training purposes.",
+  "justification": "The provided documentation explains how data is protected when used for model improvement and confirms that users have control over these settings, but it does not specify a fixed duration for how long data is used for training purposes.",
   "product_area": "data_privacy",
-  "response": "When you allow us to use your data to help improve Claude, we implement several privacy protections, such as de-linking your data from your user ID before any review. We do not use this data to build profiles about you or sell it to third parties. You maintain full control over these settings and can adjust your privacy and model improvement preferences at any time. Please note that if our safety classifiers flag your conversations, they may still be used to improve our internal trust and safety models."
+  "response": "When you allow us to use your data to help improve Claude, we implement several privacy protections, such as de-linking your data from your user ID before any review. We do not have a specific timeframe for how long individual pieces of data are used for model improvement, but you maintain full control and can adjust your privacy and model improvement settings at any time."
 }
 ```
 
 ### Final Response
 ```text
-When you allow us to use your data to help improve Claude, we implement several privacy protections, such as de-linking your data from your user ID before any review. We do not use this data to build profiles about you or sell it to third parties. You maintain full control over these settings and can adjust your privacy and model improvement preferences at any time. Please note that if our safety classifiers flag your conversations, they may still be used to improve our internal trust and safety models.
+When you allow us to use your data to help improve Claude, we implement several privacy protections, such as de-linking your data from your user ID before any review. We do not have a specific timeframe for how long individual pieces of data are used for model improvement, but you maintain full control and can adjust your privacy and model improvement settings at any time.
 ```
 
 ### Final Justification
 ```text
-The provided documentation explains how data is protected when used for model improvement and confirms that users maintain control over their privacy settings, but it does not specify a fixed duration for how long data is used for training purposes.
+The provided documentation explains how data is protected when used for model improvement and confirms that users have control over these settings, but it does not specify a fixed duration for how long data is used for training purposes.
 ```

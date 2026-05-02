@@ -18,7 +18,7 @@ My mock interviews stopped in between, please give me the refund asap
   "product_area": "mock_interviews",
   "request_type": "product_issue",
   "risk_level": "low",
-  "sentiment_analysis": "Frustrated and urgent tone regarding a service failure and refund request.",
+  "sentiment_analysis": "Frustrated and urgent due to service interruption and request for refund.",
   "status": "replied"
 }
 ```
@@ -31,7 +31,7 @@ My mock interviews stopped in between, please give me the refund asap
   "product_area": "mock_interviews",
   "request_type": "product_issue",
   "risk_level": "low",
-  "sentiment_analysis": "Frustrated and urgent tone regarding a service failure and refund request.",
+  "sentiment_analysis": "Frustrated and urgent due to service interruption and request for refund.",
   "status": "replied"
 }
 ```
@@ -48,7 +48,7 @@ My mock interviews stopped in between, please give me the refund asap
   "product_area": "mock_interviews",
   "request_type": "product_issue",
   "risk_level": "low",
-  "sentiment_analysis": "Frustrated and urgent tone regarding a service failure and refund request.",
+  "sentiment_analysis": "Frustrated and urgent due to service interruption and request for refund.",
   "status": "replied"
 }
 ```
@@ -61,18 +61,18 @@ My mock interviews stopped in between, please give me the refund asap
 ```json
 {
   "grounded": true,
-  "justification": "The support documentation explicitly directs users to contact help@hackerrank.com for refund requests related to dissatisfaction with mock interviews.",
+  "justification": "The support documentation explicitly directs users to contact help@hackerrank.com for refund requests if they are not satisfied with their mock interview.",
   "product_area": "mock_interviews",
-  "response": "I am sorry to hear that you experienced issues during your mock interview. If you are not satisfied with your mock interview experience, please contact help@hackerrank.com so our support team can review your request. Please note that if you encounter technical issues, we recommend ensuring you have a stable internet connection and a quiet environment before starting your session."
+  "response": "I am sorry to hear that you experienced issues during your mock interview. If you are not satisfied with your mock interview experience, please contact help@hackerrank.com. Our support team will promptly review your request regarding your refund."
 }
 ```
 
 ### Final Response
 ```text
-I am sorry to hear that you experienced issues during your mock interview. If you are not satisfied with your mock interview experience, please contact help@hackerrank.com so our support team can review your request. Please note that if you encounter technical issues, we recommend ensuring you have a stable internet connection and a quiet environment before starting your session.
+I am sorry to hear that you experienced issues during your mock interview. If you are not satisfied with your mock interview experience, please contact help@hackerrank.com. Our support team will promptly review your request regarding your refund.
 ```
 
 ### Final Justification
 ```text
-The support documentation explicitly directs users to contact help@hackerrank.com for refund requests related to dissatisfaction with mock interviews.
+The support documentation explicitly directs users to contact help@hackerrank.com for refund requests if they are not satisfied with their mock interview.
 ```

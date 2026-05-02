@@ -61,18 +61,18 @@ Hi, please pause our subscription. We have stopped all hiring efforts for now.
 ```json
 {
   "grounded": true,
-  "justification": "The response provides instructions for the 'Pause Subscription' feature for eligible users while also offering the alternative of cancellation for those who do not qualify for a pause.",
+  "justification": "The response provides instructions for the 'Pause Subscription' feature for eligible users and offers the alternative of cancellation for those who do not qualify, based on the provided documentation.",
   "product_area": "billing_subscription",
-  "response": "If you are an individual self-serve plan subscriber on a monthly Individual Basic or Interview plan, you can temporarily pause your subscription through your account settings. To do this, navigate to your profile icon, select Settings, go to the Billing section under Subscription, and click Cancel Plan to access the Pause Subscription feature. If you do not meet these specific criteria, you may need to cancel your subscription instead by following the cancellation steps in your account settings. Please note that cancellation takes effect at the end of your current billing cycle."
+  "response": "If you are an individual self-serve plan subscriber on a monthly Individual Basic or Interview plan, you can temporarily pause your subscription through your account settings. To do this, navigate to your profile icon, select Settings, go to the Billing section under Subscription, and click Cancel Plan to access the Pause Subscription feature. If you do not meet these specific criteria, you may choose to cancel your subscription instead by navigating to your subscription management page and selecting the cancel option. Please note that cancellations take effect at the end of your current billing cycle."
 }
 ```
 
 ### Final Response
 ```text
-If you are an individual self-serve plan subscriber on a monthly Individual Basic or Interview plan, you can temporarily pause your subscription through your account settings. To do this, navigate to your profile icon, select Settings, go to the Billing section under Subscription, and click Cancel Plan to access the Pause Subscription feature. If you do not meet these specific criteria, you may need to cancel your subscription instead by following the cancellation steps in your account settings. Please note that cancellation takes effect at the end of your current billing cycle.
+If you are an individual self-serve plan subscriber on a monthly Individual Basic or Interview plan, you can temporarily pause your subscription through your account settings. To do this, navigate to your profile icon, select Settings, go to the Billing section under Subscription, and click Cancel Plan to access the Pause Subscription feature. If you do not meet these specific criteria, you may choose to cancel your subscription instead by navigating to your subscription management page and selecting the cancel option. Please note that cancellations take effect at the end of your current billing cycle.
 ```
 
 ### Final Justification
 ```text
-The response provides instructions for the 'Pause Subscription' feature for eligible users while also offering the alternative of cancellation for those who do not qualify for a pause.
+The response provides instructions for the 'Pause Subscription' feature for eligible users and offers the alternative of cancellation for those who do not qualify, based on the provided documentation.
 ```
