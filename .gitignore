@@ -29,9 +29,11 @@ Thumbs.db
 # local data / caches the participant may create
 data/index/
 data/embeddings/
+*.sqlite3
 *.sqlite
 *.db
 code/reasoning-logs/
+code/.triage_index/
 
 # deliverables
 *.zip
