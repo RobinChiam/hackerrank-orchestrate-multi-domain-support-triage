@@ -31,6 +31,7 @@ data/index/
 data/embeddings/
 *.sqlite
 *.db
+code/reasoning-logs/
 
 # deliverables
 *.zip
