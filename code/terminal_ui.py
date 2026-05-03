@@ -9,7 +9,7 @@ def clear_line(*, enabled: bool = True) -> None:
     """Clear the current terminal line when UI output is enabled."""
     if not enabled:
         return
-    sys.stdout.write("\r" + (" " * 96) + "\r")
+    sys.stdout.write("\r" + (" " * 140) + "\r")
     sys.stdout.flush()
 
 
@@ -60,6 +60,103 @@ class Spinner:
                 sys.stdout.flush()
             frame_index += 1
             time.sleep(self.interval_seconds)
+
+
+class VectorIndexBuildAnimation:
+    """Animated status line for the vector index build phase."""
+
+    def __init__(
+        self,
+        *,
+        total_chunks: int,
+        enabled: bool = True,
+        width: int = 20,
+        interval_seconds: float = 0.08,
+    ) -> None:
+        """Configure an animated progress indicator for indexing."""
+        self.total_chunks = max(total_chunks, 0)
+        self.enabled = enabled
+        self.width = width
+        self.interval_seconds = interval_seconds
+        self.completed_chunks = 0
+        self.phase = "Preparing corpus"
+        self._frames = ("|", "/", "-", "\\")
+        self._pulse_index = 0
+        self._frame_index = 0
+        self._lock = threading.Lock()
+        self._stop_event = threading.Event()
+        self._thread: threading.Thread | None = None
+
+    def start(self, phase: str | None = None) -> None:
+        """Start rendering the animated indexing status."""
+        if not self.enabled or self._thread is not None:
+            return
+        if phase is not None:
+            self.phase = phase
+        self._stop_event.clear()
+        self._thread = threading.Thread(
+            target=self._run,
+            name="vector-index-animation",
+            daemon=True,
+        )
+        self._thread.start()
+
+    def update(
+        self,
+        *,
+        phase: str | None = None,
+        completed_chunks: int | None = None,
+    ) -> None:
+        """Update the current indexing phase and completed chunk count."""
+        if not self.enabled:
+            return
+        with self._lock:
+            if phase is not None:
+                self.phase = phase
+            if completed_chunks is not None:
+                self.completed_chunks = min(max(completed_chunks, 0), self.total_chunks)
+
+    def stop(self, *, success_message: str | None = None) -> None:
+        """Stop the animation and optionally print a final status line."""
+        if not self.enabled:
+            return
+        if self._thread is not None:
+            self._stop_event.set()
+            self._thread.join()
+            self._thread = None
+        clear_line(enabled=True)
+        if success_message:
+            sys.stdout.write(f"{success_message}\n")
+            sys.stdout.flush()
+
+    def _run(self) -> None:
+        """Render animated index build frames until stopped."""
+        while not self._stop_event.is_set():
+            with self._lock:
+                frame = self._frames[self._frame_index % len(self._frames)]
+                bar = self._build_bar_locked()
+                total = self.total_chunks or 1
+                percent = int((self.completed_chunks / total) * 100)
+                sys.stdout.write(
+                    f"\r{frame} Vector Index | {self.phase} | "
+                    f"[{bar}] {percent:3d}% | {self.completed_chunks}/{self.total_chunks} chunks"
+                )
+                sys.stdout.flush()
+                self._frame_index += 1
+                self._pulse_index = (self._pulse_index + 1) % max(self.width, 1)
+            time.sleep(self.interval_seconds)
+
+    def _build_bar_locked(self) -> str:
+        """Build a progress bar with a moving pulse at the leading edge."""
+        if self.width <= 0:
+            return ""
+        total = self.total_chunks or 1
+        filled = int((self.completed_chunks / total) * self.width)
+        bar = ["=" if index < filled else " " for index in range(self.width)]
+        if self.completed_chunks < self.total_chunks:
+            pulse_position = min(max(filled, self._pulse_index), self.width - 1)
+            bar[pulse_position] = ">"
+        return "".join(bar)
 
 
 class ProgressBar:

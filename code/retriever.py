@@ -6,6 +6,7 @@ from config import DATA_DIR, DEFAULT_EMBEDDING_DIMENSION
 from corpus import compute_corpus_hash, load_corpus_chunks
 from gemini_client import GeminiClient
 from models import RetrievalHit
+from terminal_ui import VectorIndexBuildAnimation
 from vector_store import SQLiteVectorStore
 
 
@@ -32,17 +33,33 @@ class RetrievalEngine:
                 print("Vector index is current.")
             return
 
-        if self.verbose:
-            print(f"Building vector index for {len(chunks)} corpus chunks...")
-        vectors = self.client.embed_texts(
-            [chunk.embedding_text for chunk in chunks],
-            task_type="RETRIEVAL_DOCUMENT",
-            titles=[chunk.title for chunk in chunks],
-            output_dimensionality=DEFAULT_EMBEDDING_DIMENSION,
+        animation = VectorIndexBuildAnimation(
+            total_chunks=len(chunks),
+            enabled=self.verbose,
         )
-        self.store.replace_all(chunks, vectors, corpus_hash)
-        if self.verbose:
-            print("Vector index build complete.")
+        animation.start("Embedding corpus chunks")
+        try:
+            vectors = self.client.embed_texts(
+                [chunk.embedding_text for chunk in chunks],
+                task_type="RETRIEVAL_DOCUMENT",
+                titles=[chunk.title for chunk in chunks],
+                output_dimensionality=DEFAULT_EMBEDDING_DIMENSION,
+                on_progress=lambda completed, _total: animation.update(
+                    phase="Embedding corpus chunks",
+                    completed_chunks=completed,
+                ),
+            )
+            animation.update(
+                phase="Writing SQLite index",
+                completed_chunks=len(chunks),
+            )
+            self.store.replace_all(chunks, vectors, corpus_hash)
+        except Exception:
+            animation.stop()
+            raise
+        animation.stop(
+            success_message=f"Vector index build complete ({len(chunks)} chunks)."
+        )
 
     def search(
         self,

@@ -5,7 +5,7 @@ import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Any
+from typing import Any, Callable
 
 from config import DEFAULT_EMBEDDING_DIMENSION
 
@@ -79,6 +79,7 @@ class GeminiClient:
         titles: list[str] | None = None,
         output_dimensionality: int = DEFAULT_EMBEDDING_DIMENSION,
         batch_size: int = 16,
+        on_progress: Callable[[int, int], None] | None = None,
     ) -> list[list[float]]:
         """Embed texts concurrently in batches while preserving input order."""
         if not texts:
@@ -102,14 +103,18 @@ class GeminiClient:
         ]
         if len(batches) == 1:
             _, batch_texts, batch_titles = batches[0]
-            return self._embed_batch(
+            vectors = self._embed_batch(
                 batch_texts,
                 task_type=task_type,
                 titles=batch_titles,
                 output_dimensionality=output_dimensionality,
             )
+            if on_progress is not None:
+                on_progress(len(texts), len(texts))
+            return vectors
 
         ordered_vectors: list[list[float] | None] = [None] * len(texts)
+        completed = 0
         max_workers = min(10, len(batches))
         with ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="gemini-embed") as executor:
             future_to_batch = {
@@ -131,6 +136,9 @@ class GeminiClient:
                         f"Expected {batch_length} embeddings, got {len(batch_vectors)}."
                     )
                 ordered_vectors[start : start + batch_length] = batch_vectors
+                completed += batch_length
+                if on_progress is not None:
+                    on_progress(completed, len(texts))
 
         if any(vector is None for vector in ordered_vectors):
             raise GeminiAPIError("One or more embedding batches did not return a result.")
