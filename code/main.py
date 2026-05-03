@@ -92,6 +92,10 @@ def build_parser() -> argparse.ArgumentParser:
         help=f"SQLite index path (default: {INDEX_DB_PATH})",
     )
 
+    subparsers.add_parser(
+        "tui", help="Launch the interactive Textual TUI."
+    )
+
     return parser
 
 
@@ -103,6 +107,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.command is None:
         fallback_args = ["run", *(argv or [])]
         args = parser.parse_args(fallback_args)
+
+    if command == "tui":
+        from tui import run_tui
+
+        run_tui()
+        return 0
 
     verbose = not getattr(args, "quiet", False)
     agent = SupportTriageAgent(index_path=args.index_path, verbose=verbose)

@@ -1,0 +1,133 @@
+/* ─── Support Triage TUI ─── */
+
+Screen {
+    layout: grid;
+    grid-size: 1;
+    grid-rows: auto 1fr;
+    background: $surface;
+}
+
+/* ── Top Row: two-column layout ── */
+
+#top-row {
+    layout: grid;
+    grid-size: 2 1;
+    grid-columns: 1fr 1fr;
+    grid-gutter: 1;
+    height: auto;
+    min-height: 16;
+    max-height: 20;
+    padding: 0 1;
+}
+
+/* ── Configuration Pane (Left) ── */
+
+#config-pane {
+    border: round $accent;
+    border-title-color: $text;
+    padding: 1 2;
+    height: 100%;
+}
+
+#config-pane .field-label {
+    margin-top: 1;
+    color: $text-muted;
+    text-style: bold;
+}
+
+#config-pane .field-label:first-child {
+    margin-top: 0;
+}
+
+#config-pane Input {
+    margin-bottom: 0;
+}
+
+#button-row {
+    layout: horizontal;
+    margin-top: 1;
+    height: auto;
+    align: left middle;
+}
+
+#build-index-btn {
+    margin-right: 2;
+    background: $primary;
+    color: $text;
+    min-width: 18;
+}
+
+#build-index-btn:hover {
+    background: $primary-lighten-1;
+}
+
+#start-run-btn {
+    background: $success;
+    color: $text;
+    min-width: 18;
+}
+
+#start-run-btn:hover {
+    background: $success-lighten-1;
+}
+
+#build-index-btn.-running,
+#start-run-btn.-running {
+    background: $surface-lighten-1;
+    color: $text-muted;
+}
+
+/* ── Monitor Pane (Right) ── */
+
+#monitor-pane {
+    border: round $accent;
+    border-title-color: $text;
+    padding: 1 2;
+    height: 100%;
+}
+
+#status-label {
+    color: $success;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+#monitor-pane ProgressBar {
+    margin-bottom: 1;
+}
+
+#progress-detail {
+    color: $text-muted;
+    margin-bottom: 1;
+}
+
+#monitor-log {
+    color: $text-disabled;
+    height: auto;
+    max-height: 4;
+    overflow-y: auto;
+}
+
+/* ── Bottom Row: Results Table ── */
+
+#table-container {
+    border: round $accent;
+    border-title-color: $text;
+    margin: 0 1 1 1;
+    height: 1fr;
+    min-height: 10;
+}
+
+#output-table {
+    height: 1fr;
+}
+
+DataTable > .datatable--header {
+    text-style: bold;
+    background: $primary-background;
+    color: $text;
+}
+
+DataTable > .datatable--cursor {
+    background: $accent 30%;
+}
