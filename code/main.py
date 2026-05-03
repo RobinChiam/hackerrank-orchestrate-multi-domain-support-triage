@@ -74,6 +74,12 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument(
         "--quiet", action="store_true", help="Suppress progress output."
     )
+    run_parser.add_argument(
+        "--verify-index",
+        action="store_true",
+        help="Run an mtime freshness check on the index before processing. "
+        "Without this flag, the run command only checks for index existence.",
+    )
 
     triage_parser = subparsers.add_parser(
         "triage", help="Run the Phase 1 triage pass on a single ticket."
@@ -133,12 +139,23 @@ def main(argv: list[str] | None = None) -> int:
             "Initializing Support Triage Agent...",
             enabled=verbose,
         )
+        # Fast-path index gating: skip the heavy ensure_index unless the
+        # user explicitly requests a rebuild or verification.
+        if args.rebuild_index:
+            agent.ensure_index(force_rebuild=True)
+        elif args.verify_index:
+            agent.ensure_index(force_rebuild=False)
+        elif not agent.index_exists():
+            # No index at all — must build.
+            agent.ensure_index(force_rebuild=False)
+        # else: index exists, skip freshness check for speed.
+
         outputs = agent.process_csv(
             input_path=args.input,
             output_path=args.output,
             top_k=args.top_k,
             limit=args.limit,
-            force_rebuild_index=args.rebuild_index,
+            force_rebuild_index=False,  # already handled above
         )
         if verbose:
             clear_line(enabled=True)

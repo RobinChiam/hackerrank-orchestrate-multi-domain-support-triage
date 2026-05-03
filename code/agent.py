@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import threading
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,9 @@ from terminal_ui import ProgressBar
 from vector_store import SQLiteVectorStore
 
 
+TicketCompletionCallback = Callable[[int, AgentOutput, int, int], None]
+
+
 class SupportTriageAgent:
     """Support triage pipeline backed by Gemini and a local SQLite vector store."""
 
@@ -68,6 +72,14 @@ class SupportTriageAgent:
         """Build or refresh the local retrieval index if needed."""
         self.retriever.ensure_index(force_rebuild=force_rebuild)
 
+    def index_exists(self) -> bool:
+        """Fast O(1) check: does the SQLite index exist and contain a corpus_hash?"""
+        return self.retriever.index_exists()
+
+    def is_index_stale(self) -> bool:
+        """Lightweight mtime check: have corpus files changed since the last build?"""
+        return self.retriever.is_index_stale()
+
     def triage_ticket(self, issue: str, subject: str, company: str) -> TriageDecision:
         """Run the Phase 1 triage pass for a single ticket."""
         ticket = Ticket(issue=issue.strip(), subject=subject.strip(), company=company.strip())
@@ -82,6 +94,7 @@ class SupportTriageAgent:
         top_k: int,
         limit: int | None,
         force_rebuild_index: bool,
+        on_ticket_complete: TicketCompletionCallback | None = None,
     ) -> list[AgentOutput]:
         """Process the input CSV concurrently and write evaluator-ready output."""
         self.ensure_index(force_rebuild=force_rebuild_index)
@@ -92,6 +105,7 @@ class SupportTriageAgent:
         ordered_results: list[dict[str, str] | None] = [None] * len(rows)
         progress_bar = ProgressBar(len(rows), enabled=self.verbose)
         progress_lock = threading.Lock()
+        completed_count = 0
         progress_bar.render_initial()
         with ThreadPoolExecutor(max_workers=10, thread_name_prefix="triage-ticket") as executor:
             future_to_index = {
@@ -103,7 +117,8 @@ class SupportTriageAgent:
                     index = future_to_index[future]
                     ticket = rows[index]
                     try:
-                        ordered_results[index] = future.result()
+                        row_data = future.result()
+                        ordered_results[index] = row_data
                     except Exception as exc:  # pragma: no cover - preserves underlying traceback.
                         progress_bar.clear()
                         company = ticket.company or "None"
@@ -111,7 +126,16 @@ class SupportTriageAgent:
                             f"Failed to process ticket {index + 1} for {company}."
                         ) from exc
                     with progress_lock:
+                        completed_count += 1
+                        current_completed = completed_count
                         progress_bar.advance()
+                    if on_ticket_complete is not None:
+                        on_ticket_complete(
+                            index + 1,
+                            self._agent_output_from_row(row_data),
+                            current_completed,
+                            len(rows),
+                        )
             finally:
                 progress_bar.clear()
 

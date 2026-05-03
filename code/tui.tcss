@@ -15,8 +15,8 @@ Screen {
     grid-columns: 1fr 1fr;
     grid-gutter: 1;
     height: auto;
-    min-height: 16;
-    max-height: 20;
+    min-height: 24;
+    max-height: 28;
     padding: 0 1;
 }
 
@@ -101,10 +101,31 @@ Screen {
     margin-bottom: 1;
 }
 
+#elapsed-label {
+    color: $text;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+.monitor-section-title {
+    color: $text;
+    text-style: bold;
+    margin-top: 1;
+}
+
+.monitor-block {
+    color: $text-muted;
+    height: auto;
+}
+
+#status-counts {
+    color: $text;
+}
+
 #monitor-log {
     color: $text-disabled;
     height: auto;
-    max-height: 4;
+    max-height: 6;
     overflow-y: auto;
 }
 
