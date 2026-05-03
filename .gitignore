@@ -32,7 +32,7 @@ data/embeddings/
 *.sqlite3
 *.sqlite
 *.db
-code/reasoning-logs/
+code/reasoning_logs/
 code/.triage_index/
 
 # deliverables
