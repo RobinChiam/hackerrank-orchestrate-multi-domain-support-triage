@@ -30,8 +30,9 @@ To win this challenge, I had to solve three primary problems:
 
 We were granted the freedom to use any tools, including AI assistants. Here is my carefully selected stack:
 
-- **Development Tool:** **Codex (GPT-5.4)**. I utilized Codex to rapidly build the application, ensuring my prompts were clear and concise. The resulting codebase strictly uses standard Python libraries without bloat or unnecessary third-party integrations, relying only on the direct API calls to my models.
+- **Development Tool:** **Codex (GPT-5.4)**. I utilized Codex to rapidly build the application, ensuring my prompts were clear and concise.
 - **Language:** **Python**. Starting from an empty `main.py`, Python allowed for incredibly fast build times (crucial for a 24-hour window) and enabled seamless integration with direct REST API calls.
+- **CLI/TUI Distribution:** `textual`, `rich`, and `python-dotenv` are included to support the interactive TUI and a cleaner local setup workflow.
 - **RAG System:** **Semantic Search via Vector Embeddings**. This was chosen over keyword-based searches (like BM25) to ensure that arbitrary, natural language requests could still be semantically matched against the local-only support corpus, preventing any reliance on web calls.
 - **AI Models:** I leveraged a dual-model approach utilizing Google's cutting-edge Gemini ecosystem:
   - **Embedding:** `gemini-embedding-2`. Ideal for asymmetrical search tasks (where the query and documentation formats differ) and capable of rich multidimensional embeddings.
@@ -73,19 +74,28 @@ LLMs inherently use probabilistic token sampling, meaning identical inputs can s
 
 ## 🚀 Getting Started
 
-Ensure you have Python 3.11+ installed. No third-party pip packages are required!
+Ensure you have Python 3.11+ installed.
 
-1. Add your API key to a `.env` file in the root directory:
-   ```env
-   GEMINI_API_KEY=your_api_key_here
-   ```
-2. Build the local vector index:
+1. Run the project bootstrap:
    ```bash
-   python3 code/main.py index
+   make setup
    ```
-3. Run the full triage batch job:
+   This creates `venv/`, installs the Python dependencies, prompts for `GEMINI_API_KEY` when `.env` is missing or incomplete, and ensures `code/.triage_index/` exists.
+2. Activate the virtual environment:
    ```bash
-   python3 code/main.py run
+   source venv/bin/activate
+   ```
+3. Confirm the CLI wiring or launch the TUI:
+   ```bash
+   python3 code/main.py --help
+   ```
+   or
+   ```bash
+   python3 code/tui.py
+   ```
+4. Optionally validate the local environment:
+   ```bash
+   python3 check_env.py
    ```
 
 *Built with ❤️ for the HackerRank Orchestrate Hackathon.*

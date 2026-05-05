@@ -28,18 +28,37 @@ The agent has three layers:
 
 ## Requirements
 
-- Python 3.11+ (tested in this workspace with Python 3.14)
-- A repo-root `.env` file containing one of:
-  - `GEMINI_API_KEY=...`
-  - `GOOGLE_API_KEY=...`
+- Python 3.11+
+- Repo-root Python dependencies installed from `requirements.txt`
+  - `textual`
+  - `rich`
+  - `python-dotenv`
+- A repo-root `.env` file containing `GEMINI_API_KEY=...`
 
-No third-party Python packages are required. The application uses only the Python standard library.
+The application runtime still relies mostly on the Python standard library, with `textual` and `rich` used for the TUI and `python-dotenv` included for environment tooling.
 
 Model overrides can still be provided in the repo-root `.env` file:
 
 - `GEMINI_TRIAGE_MODEL=...`
 - `GEMINI_RESPONSE_MODEL=...`
 - `GEMINI_EMBEDDING_MODEL=...`
+
+## Getting Started
+
+From the repo root:
+
+```bash
+make setup
+source venv/bin/activate
+python3 check_env.py
+```
+
+Then launch either interface:
+
+```bash
+python3 code/main.py --help
+python3 code/tui.py
+```
 
 ## Commands
 
